@@ -126,10 +126,8 @@ export default function App() {
   // Navigation / View State
   // 'home' = 지리 포털 메인 검색창, 'map' = 세계 지리 인터랙티브 탐색 지도
   const [viewMode, setViewMode] = useState<'home' | 'map'>('home');
-  const [selectedCountry, setSelectedCountry] = useState<Country>(
-    countriesData.find(c => c.id === 'switzerland') || countriesData[0]
-  );
-  const [searchQuery, setSearchQuery] = useState('스위스');
+  const [selectedCountry, setSelectedCountry] = useState<Country>(countriesData[0]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeContinent, setActiveContinent] = useState<'전체' | '유럽' | '아프리카'>('전체');
 
   // Autocomplete suggestions dropdown visibility state
