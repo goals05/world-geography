@@ -1,0 +1,6 @@
+{
+  "name": "초등 6학년 세계 지리 학습 플랫폼",
+  "description": "초등학교 6학년 수준의 유럽과 아프리카 국가별 지리 특징, 기후, 자연 환경, 대표 3대 랜드마크 및 위경도 좌표계를 시각적 인터랙티브 지도와 검색으로 쉽게 공부하는 교육 플랫폼입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
