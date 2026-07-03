@@ -109,6 +109,10 @@ const getEasyRegion = (region: string): { easyTitle: string; description: string
     "사헬 사막 전이대 및 나일강 대합류 분지": {
       easyTitle: "사막 옆 건조한 풀밭과 큰 강들이 만나는 평지",
       description: "'사헬'은 사하라 사막의 남쪽 테두리로, 비가 적게 와서 사막으로 변해가는 건조한 풀밭 지대예요. 여러 큰 강들이 합쳐져 평지를 이루고 있어요."
+    },
+    "동유럽 대평원 및 발트해 연안 지대": {
+      easyTitle: "동쪽의 끝없는 평야와 잔잔한 바닷가",
+      description: "끝없이 아주 멀리까지 다 평평한 넓은 평야(대평원)가 이어지는 곳이에요. 북쪽에는 육지에 둘러싸여 파도가 잔잔한 발트해 바다가 있답니다."
     }
   };
 
@@ -224,6 +228,76 @@ const getLandmarkImageUrl = (countryId: string, index: number): string => {
       'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80', // Serengeti plains
       'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80', // Kilimanjaro majestic mountain with elephants
       'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80'  // Ngorongoro crater safari
+    ],
+    czech: [
+      'https://images.unsplash.com/photo-1541380742-f361c1106093?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1513805959324-96eb66ca8713?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80'
+    ],
+    slovakia: [
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80'
+    ],
+    netherlands: [
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80'
+    ],
+    belgium: [
+      'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1498503182468-3b51cbb6cb24?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80'
+    ],
+    poland: [
+      'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'
+    ],
+    hungary: [
+      'https://images.unsplash.com/photo-1565113915014-ca051e843f51?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1549880181-56a44cf8a4a1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80'
+    ],
+    ukraine: [
+      'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1558231580-0a8a7ca2c676?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'
+    ],
+    bulgaria: [
+      'https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80'
+    ],
+    croatia: [
+      'https://images.unsplash.com/photo-1555992336-03a23c7b20eb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1510414842594-fc614ea9416f?auto=format&fit=crop&w=800&q=80'
+    ],
+    austria: [
+      'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'
+    ],
+    tunisia: [
+      'https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1547234935-80c7145ec969?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80'
+    ],
+    libya: [
+      'https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1547234935-80c7145ec969?auto=format&fit=crop&w=800&q=80'
+    ],
+    'south-sudan': [
+      'https://images.unsplash.com/photo-1527269537047-40fbe5034111?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80'
+    ],
+    somalia: [
+      'https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80'
     ]
   };
 
@@ -241,14 +315,6 @@ export default function App() {
   // Autocomplete suggestions dropdown visibility state
   const [showHomeSuggestions, setShowHomeSuggestions] = useState(false);
   const [showMapSuggestions, setShowMapSuggestions] = useState(false);
-
-  // Landmark photo popup modal state
-  const [activeLandmark, setActiveLandmark] = useState<{
-    title: string;
-    desc: string;
-    imageUrl: string;
-    countryName: string;
-  } | null>(null);
 
   // Map Style State
   const [mapTheme, setMapTheme] = useState<'satellite' | 'terrain' | 'default'>('default');
@@ -868,7 +934,7 @@ export default function App() {
                 {/* 2. Top 3 Famous Landmarks */}
                 <div className="flex flex-col gap-2.5">
                   <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                    📸 대표 3대 지리 랜드마크 & 명소
+                    🗺️ 대표 3대 지리 랜드마크 & 명소
                   </span>
                   <div className="space-y-2.5">
                     {selectedCountry.famousLandmarks.map((landmark, idx) => {
@@ -877,30 +943,31 @@ export default function App() {
                       const desc = parts[1]?.replace(/[\)\]]/, '').trim();
 
                       return (
-                        <button
+                        <div
                           key={idx}
-                          type="button"
-                          onClick={() => {
-                            setActiveLandmark({
-                              title,
-                              desc: desc || '',
-                              imageUrl: getLandmarkImageUrl(selectedCountry.id, idx),
-                              countryName: selectedCountry.name
-                            });
-                          }}
-                          className="w-full text-left bg-white border border-slate-200/80 p-3 rounded-2xl flex gap-3 shadow-3xs hover:border-blue-500 hover:shadow-xs hover:bg-blue-50/10 active:scale-[0.99] transition-all duration-200 cursor-pointer group"
+                          className="w-full bg-white border border-slate-200/80 p-3 rounded-2xl flex gap-3 shadow-3xs hover:border-blue-500/50 hover:shadow-2xs transition-all duration-200 group"
                         >
-                          <div className="w-6 h-6 bg-blue-600 group-hover:bg-blue-500 text-white font-black rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm shadow-blue-100 transition-colors">
+                          <div className="w-6 h-6 bg-blue-600 text-white font-black rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm shadow-blue-100">
                             {idx + 1}
                           </div>
-                          <div className="text-xs flex-1">
-                            <h4 className="font-extrabold text-slate-900 group-hover:text-blue-700 transition-colors flex items-center gap-1.5 justify-between">
-                              <span>{title}</span>
-                              <span className="text-[10px] text-blue-500 font-bold bg-blue-50 px-1.5 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">사진 보기 📸</span>
-                            </h4>
-                            {desc && <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed font-bold">{desc}</p>}
+                          <div className="text-xs flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <h4 className="font-extrabold text-slate-900 truncate">
+                                {title}
+                              </h4>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(title + ' ' + selectedCountry.name)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg font-black transition-all border border-blue-100 cursor-pointer"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                <span>지도 🗺️</span>
+                              </a>
+                            </div>
+                            {desc && <p className="text-[11px] text-slate-500 mt-1 leading-relaxed font-bold">{desc}</p>}
                           </div>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
@@ -960,17 +1027,6 @@ export default function App() {
                         <span className="text-xs font-extrabold text-blue-600 font-mono">{getCoordinateRange(selectedCountry.longitude)}</span>
                       </div>
                     </div>
-
-                    {/* Google Maps link via GPS Coordinates */}
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${selectedCountry.latitude},${selectedCountry.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-[10px] rounded-lg flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer"
-                    >
-                      <ExternalLink className="w-3 h-3 text-blue-400" />
-                      <span>GPS 좌표로 구글 지도 열기 🗺️</span>
-                    </a>
 
                     {/* Hemisphere & Elevation parameters */}
                     <div className="text-[11px] font-semibold text-slate-600 space-y-1 bg-slate-50/50 p-2 rounded-xl">
@@ -1516,88 +1572,6 @@ export default function App() {
           <p className="text-slate-600 text-[10px]">© 2026 World Geography Interactive Platform. All Rights Reserved.</p>
         </div>
       </footer>
-
-      {/* 4. LANDMARK PHOTO MODAL */}
-      <AnimatePresence>
-        {activeLandmark && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setActiveLandmark(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs cursor-pointer"
-            />
-
-            {/* Modal Body */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ type: 'spring', duration: 0.4 }}
-              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full relative z-10 border border-slate-100 flex flex-col"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setActiveLandmark(null)}
-                className="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full transition-all cursor-pointer z-20"
-                aria-label="닫기"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              {/* Image Container */}
-              <div className="h-64 sm:h-72 w-full bg-slate-100 relative overflow-hidden group">
-                <img
-                  src={activeLandmark.imageUrl}
-                  alt={activeLandmark.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-transparent pointer-events-none" />
-                
-                {/* Location Badge */}
-                <div className="absolute bottom-4 left-4 bg-blue-600/90 text-white font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />
-                  <span>{activeLandmark.countryName}</span>
-                </div>
-              </div>
-
-              {/* Text Info */}
-              <div className="p-6">
-                <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 mb-2">
-                  <span className="text-blue-600">📍</span>
-                  {activeLandmark.title}
-                </h3>
-                
-                <p className="text-xs text-slate-500 leading-relaxed font-bold mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  {activeLandmark.desc || '지리적 유산 및 명소에 대한 설명입니다.'}
-                </p>
-
-                {/* Footer Buttons */}
-                <div className="flex gap-2 justify-end">
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeLandmark.title + ' ' + activeLandmark.countryName)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all cursor-pointer shadow-sm shadow-blue-100 flex items-center gap-1.5"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>구글 지도로 보기</span>
-                  </a>
-                  <button
-                    onClick={() => setActiveLandmark(null)}
-                    className="bg-slate-900 hover:bg-slate-800 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition-all cursor-pointer shadow-sm shadow-slate-200"
-                  >
-                    닫기
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </div>
   );
