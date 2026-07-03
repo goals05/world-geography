@@ -24,6 +24,100 @@ const getCoordinateRange = (coordStr: string): string => {
   return coordStr;
 };
 
+const getEasyRegion = (region: string): { easyTitle: string; description: string } => {
+  const mapping: Record<string, { easyTitle: string; description: string }> = {
+    "북서아프리카 마그레브 산악지대": {
+      easyTitle: "아프리카 북서쪽 산맥 지대",
+      description: "'마그레브'는 아랍어로 '해가 지는 서쪽 땅'을 뜻해요. 바다 옆에 높고 험한 아틀라스 산맥이 솟아 있는 멋진 곳이랍니다."
+    },
+    "북동아프리카 나일강 사막 문명권": {
+      easyTitle: "나일강 주변의 사막 지대",
+      description: "세계에서 가장 긴 나일강 덕분에 주변에 비옥한 땅이 생겼어요. 하지만 강을 조금만 벗어나면 엄청나게 넓고 건조한 사하라 사막이 펼쳐져요."
+    },
+    "남서아프리카 대서양 연안 사구 및 중앙고원 사막": {
+      easyTitle: "바닷가 모래언덕과 높은 사막 지대",
+      description: "'사구'는 바람에 실려 쌓인 '모래언덕'이에요. 바다 바로 옆에 거대한 모래 언덕과 높은 고원의 사막이 함께 있는 신기한 곳이에요."
+    },
+    "남부아프리카 고원 및 연안 지대": {
+      easyTitle: "높은 평원과 바닷가 지대",
+      description: "가운데는 높고 평평한 땅(고원)으로 되어 있고, 바다와 만나는 주변은 깎아지른 듯한 가파른 절벽으로 이루어진 독특한 땅이에요."
+    },
+    "북아프리카 마그레브 해안림 및 중앙 사하라 사막지대": {
+      easyTitle: "바닷가 숲과 넓은 사하라 사막",
+      description: "바다 근처는 따뜻하고 나무가 자라지만, 안쪽으로 들어가면 세계에서 가장 크고 더운 모래 사막인 사하라 사막이 펼쳐집니다."
+    },
+    "서아프리카 기니만 충적 델타지대": {
+      easyTitle: "서쪽 바닷가 넓은 강 하류 평야",
+      description: "'충적 델타'는 강물이 실어 나른 비옥한 흙과 모래가 강 하류 바닷가에 쌓여서 만들어진 넓고 풍요로운 삼각주 평야를 말해요."
+    },
+    "동아프리카 대고원 산악 내륙권": {
+      easyTitle: "동쪽의 높은 평원과 큰 산 지대",
+      description: "바다에서 먼 내륙에 있는 아주 높고 넓은 평원이에요. 아프리카에서 가장 높은 킬리만자로산 같은 거대한 화산들이 솟아 있어요."
+    },
+    "동아프리카 연안 사바나 야생권": {
+      easyTitle: "동쪽 바닷가와 넓은 풀밭 지대",
+      description: "'사바나'는 건기가 있어서 키 작은 나무들과 긴 풀들이 자라는 넓은 초원이에요. 얼룩말과 사자 같은 야생 동물이 아주 많이 살아요."
+    },
+    "동아프리카 고원 및 지구대권": {
+      easyTitle: "높은 평원과 갈라진 큰 골짜기",
+      description: "'지구대'는 땅속의 거대한 힘 때문에 땅이 양옆으로 갈라지면서 생긴 깊고 긴 골짜기예요. 주변에 깊고 아름다운 호수들이 많답니다."
+    },
+    "북서유럽 그레이트브리튼 제도": {
+      easyTitle: "북서쪽의 큰 섬나라 지대",
+      description: "'제도'는 무리지어 있는 여러 섬들을 뜻해요. 영국과 아일랜드가 위치한 푸르고 온화한 섬들로 이루어진 지형이에요."
+    },
+    "중앙유럽 남고북저 지형권": {
+      easyTitle: "남쪽은 높은 산, 북쪽은 평평한 지형",
+      description: "'남고북저'는 '남쪽은 높고 북쪽은 낮다'는 뜻이에요. 남쪽에는 높은 알프스 산맥이 있고 북쪽에는 넓고 평평한 평야가 펼쳐져 있어요."
+    },
+    "남서유럽 이베리아 고원 지대": {
+      easyTitle: "남서쪽의 넓고 높은 평원 지대",
+      description: "스페인과 포르투갈이 있는 반도로, 대부분의 땅이 주변 바다보다 훨씬 높은 해발고도를 가진 거대한 고원과 산맥으로 이루어져 있어요."
+    },
+    "남동유럽 발칸반도 산악·군도지대": {
+      easyTitle: "남동쪽의 산과 섬이 많은 지대",
+      description: "'군도'는 무리지어 모여 있는 많은 섬들이예요. 울퉁불퉁한 산맥들이 바다 깊숙이 잠겨 그리스처럼 수많은 섬과 복잡한 해안선이 되었어요."
+    },
+    "중앙유럽 알프스 산악 내륙지대": {
+      easyTitle: "유럽의 지붕 알프스 산맥 지대",
+      description: "바다가 없는 내륙 한가운데에 위치해 있어요. 일 년 내외 얼음이 얼어있는 높은 알프스 산맥과 에메랄드빛 계곡이 가득한 웅장한 지형이에요."
+    },
+    "북대서양 판과 판이 벌어지는 지열 화산도": {
+      easyTitle: "지각이 갈라지며 생긴 불과 얼음의 섬",
+      description: "지구 표면을 이루는 단단한 판들이 서로 양쪽으로 벌어지는 곳이에요. 틈새로 마그마가 솟아올라 화산과 온천이 펄펄 끓는 섬이랍니다."
+    },
+    "북유럽 스칸디나비아 빙하지대": {
+      easyTitle: "얼음 빙하가 깎아 만든 절벽과 골짜기",
+      description: "옛날 추운 빙하기 시절에 엄청나게 거대한 얼음덩어리(빙하)가 땅을 누르고 깎으며 흘러가서 깊은 U자형 골짜기와 절벽 바닷길을 만들었어요."
+    },
+    "북유럽 스칸디나비아 침엽수 평원지대": {
+      easyTitle: "뾰족뾰족 소나무 가득한 숲속 평원",
+      description: "잎이 뾰족하고 추위에 강한 소나무와 전나무 같은 침엽수림(타이가)이 끝없이 펼쳐진, 평평하고 눈이 많이 내리는 북쪽 나라들의 지형이에요."
+    },
+    "남유럽 아펜니노 반도 및 지중해역": {
+      easyTitle: "장화 모양 반도와 따뜻한 지중해 바닷가",
+      description: "이탈리아 반도를 척추처럼 길게 가로지르는 아펜니노 산맥이 있고, 일 년 내내 따뜻한 햇살이 비치는 지중해 바다로 둘러싸인 아름다운 곳이에요."
+    },
+    "인도양 고립 독립 거대 섬 생태계": {
+      easyTitle: "인도양 속 나홀로 외딴 거대 섬",
+      description: "다른 대륙들과 아주 아주 오랫동안 떨어져 지냈기 때문에, 마다가스카르처럼 지구상 다른 어디에서도 볼 수 없는 희귀한 동물과 식물들이 가득해요."
+    },
+    "서유럽 대륙 평야 및 분지 지대": {
+      easyTitle: "서쪽의 넓은 평야와 사발 모양 땅",
+      description: "'분지'는 주변이 산으로 둘러싸여 한가운데가 사발처럼 오목하고 평평하게 들어간 땅이에요. 농사짓기에 최고로 좋은 넓고 기름진 땅이 많아요."
+    },
+    "사헬 사막 전이대 및 나일강 대합류 분지": {
+      easyTitle: "사막 옆 건조한 풀밭과 큰 강들이 만나는 평지",
+      description: "'사헬'은 사하라 사막의 남쪽 테두리로, 비가 적게 와서 사막으로 변해가는 건조한 풀밭 지대예요. 여러 큰 강들이 합쳐져 평지를 이루고 있어요."
+    }
+  };
+
+  return mapping[region] || {
+    easyTitle: region,
+    description: "초등학교 지리 과정에서 만나는 아름답고 독특한 자연환경을 보여주는 지형입니다."
+  };
+};
+
 const getLandmarkImageUrl = (countryId: string, index: number): string => {
   const images: Record<string, string[]> = {
     uk: [
@@ -645,10 +739,20 @@ export default function App() {
                   </div>
 
                   {/* Region & Hemisphere Row */}
-                  <div className="bg-white border border-slate-200/60 p-3 rounded-xl space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 font-bold text-[10px]">지형학적 대분류</span>
-                      <span className="font-extrabold text-slate-800">{selectedCountry.geographicRegion}</span>
+                  <div className="bg-white border border-slate-200/60 p-3 rounded-xl space-y-2.5">
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="text-slate-400 font-bold text-[10px] mt-0.5 whitespace-nowrap">지형학적 대분류</span>
+                        <div className="text-right">
+                          <span className="font-extrabold text-slate-800 text-xs block">{selectedCountry.geographicRegion}</span>
+                          <span className="text-[9.5px] text-blue-600 font-black bg-blue-50/70 border border-blue-100 px-1.5 py-0.5 rounded-md inline-block mt-1">
+                            🌱 초등 6학년 쉬운 설명: {getEasyRegion(selectedCountry.geographicRegion).easyTitle}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-[10.5px] text-slate-600 bg-slate-50 border border-slate-100 p-2.5 rounded-lg leading-relaxed font-semibold">
+                        💡 <span className="text-blue-700 font-bold">도움말:</span> {getEasyRegion(selectedCountry.geographicRegion).description}
+                      </p>
                     </div>
                     <div className="h-px bg-slate-100" />
                     <div className="flex justify-between items-center">
@@ -878,6 +982,17 @@ export default function App() {
                         <span className="text-slate-400 font-bold">해발 고도 필터</span>
                         <span className="text-slate-700 font-black text-[10px] truncate max-w-[170px]">{selectedCountry.elevation}</span>
                       </div>
+                    </div>
+
+                    {/* Child-friendly Geographic Explanation in Map Mode */}
+                    <div className="bg-blue-50/40 border border-blue-100/50 p-2.5 rounded-xl text-[10px] leading-relaxed">
+                      <div className="font-extrabold text-blue-900 flex items-center gap-1 mb-1">
+                        <span>🌱</span>
+                        <span>초등 6학년 쉬운 지형: {getEasyRegion(selectedCountry.geographicRegion).easyTitle}</span>
+                      </div>
+                      <p className="text-slate-600 font-semibold">
+                        {getEasyRegion(selectedCountry.geographicRegion).description}
+                      </p>
                     </div>
 
                     {/* Scale Ruler */}
