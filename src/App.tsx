@@ -3,12 +3,26 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, MapPin, Globe, Compass, Sun, Send, 
   X, GraduationCap, ArrowLeft, Star, 
-  Sparkles, Info, Map, AlertTriangle, Eye, EyeOff
+  Sparkles, Info, Map, AlertTriangle, Eye, EyeOff,
+  ExternalLink
 } from 'lucide-react';
 import { countriesData, Country } from './data/countries';
 
 const mapWidth = 800;
 const mapHeight = 550;
+
+const getCoordinateRange = (coordStr: string): string => {
+  if (!coordStr) return '';
+  const match = coordStr.match(/(북위|남위|동경|서경)\s*(\d+)/);
+  if (match) {
+    const direction = match[1];
+    const degrees = parseInt(match[2], 10);
+    const min = Math.max(0, degrees - 3);
+    const max = degrees + 3;
+    return `${direction} ${min}~${max}° 사이`;
+  }
+  return coordStr;
+};
 
 const getLandmarkImageUrl = (countryId: string, index: number): string => {
   const images: Record<string, string[]> = {
@@ -285,7 +299,7 @@ export default function App() {
                               <span className="font-extrabold text-slate-800 text-sm">{country.name}</span>
                               <span className="text-xs text-slate-400 font-bold">({country.englishName})</span>
                             </div>
-                            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">위치: {country.latitude}, {country.longitude}</p>
+                            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">위치: {getCoordinateRange(country.latitude)}, {getCoordinateRange(country.longitude)}</p>
                           </div>
                         </div>
                         <div className="text-right flex flex-col items-end">
@@ -615,8 +629,8 @@ export default function App() {
                         <MapPin className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <span className="text-[9px] text-slate-400 font-black block">정밀 위도 (Lat)</span>
-                        <span className="font-extrabold text-slate-800">{selectedCountry.latitude}</span>
+                        <span className="text-[9px] text-slate-400 font-black block">위도 범위 (Lat Range)</span>
+                        <span className="font-extrabold text-slate-800">{getCoordinateRange(selectedCountry.latitude)}</span>
                       </div>
                     </div>
                     <div className="bg-white border border-slate-200/60 p-2.5 rounded-xl flex items-center gap-2">
@@ -624,8 +638,8 @@ export default function App() {
                         <Globe className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <span className="text-[9px] text-slate-400 font-black block">정밀 경도 (Long)</span>
-                        <span className="font-extrabold text-slate-800">{selectedCountry.longitude}</span>
+                        <span className="text-[9px] text-slate-400 font-black block">경도 범위 (Long Range)</span>
+                        <span className="font-extrabold text-slate-800">{getCoordinateRange(selectedCountry.longitude)}</span>
                       </div>
                     </div>
                   </div>
@@ -647,6 +661,17 @@ export default function App() {
                       <span className="font-extrabold text-slate-800 text-right">{selectedCountry.elevation}</span>
                     </div>
                   </div>
+
+                  {/* Google Maps External Exploration Button */}
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedCountry.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm shadow-blue-100 hover:shadow-md transition-all active:scale-[0.99] cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>구글 지도로 {selectedCountry.name} 탐색하기</span>
+                  </a>
 
                   {/* 3대 대표 지형물 */}
                   <div className="bg-blue-50/50 border border-blue-100 p-3 rounded-xl">
@@ -823,14 +848,25 @@ export default function App() {
                     {/* Lat/Long Telemetry */}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-white border border-slate-200/60 p-2 rounded-xl text-center shadow-2xs">
-                        <span className="text-[9px] text-slate-400 font-black block">측정 위도 (Latitude)</span>
-                        <span className="text-xs font-extrabold text-blue-600 font-mono">{selectedCountry.latitude}</span>
+                        <span className="text-[9px] text-slate-400 font-black block">위도 범위 (Latitude Range)</span>
+                        <span className="text-xs font-extrabold text-blue-600 font-mono">{getCoordinateRange(selectedCountry.latitude)}</span>
                       </div>
                       <div className="bg-white border border-slate-200/60 p-2 rounded-xl text-center shadow-2xs">
-                        <span className="text-[9px] text-slate-400 font-black block">측정 경도 (Longitude)</span>
-                        <span className="text-xs font-extrabold text-blue-600 font-mono">{selectedCountry.longitude}</span>
+                        <span className="text-[9px] text-slate-400 font-black block">경도 범위 (Longitude Range)</span>
+                        <span className="text-xs font-extrabold text-blue-600 font-mono">{getCoordinateRange(selectedCountry.longitude)}</span>
                       </div>
                     </div>
+
+                    {/* Google Maps link via GPS Coordinates */}
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${selectedCountry.latitude},${selectedCountry.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-[10px] rounded-lg flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer"
+                    >
+                      <ExternalLink className="w-3 h-3 text-blue-400" />
+                      <span>GPS 좌표로 구글 지도 열기 🗺️</span>
+                    </a>
 
                     {/* Hemisphere & Elevation parameters */}
                     <div className="text-[11px] font-semibold text-slate-600 space-y-1 bg-slate-50/50 p-2 rounded-xl">
@@ -1208,9 +1244,9 @@ export default function App() {
                     {/* Floating HUD reticle badge over the focal point showing coordinates */}
                     <g transform={`translate(${selectedCountry.mapCoords.x}, ${selectedCountry.mapCoords.y + 26})`} className="opacity-95 select-none pointer-events-none">
                       <rect
-                        x="-70"
+                        x="-95"
                         y="-8"
-                        width="140"
+                        width="190"
                         height="16"
                         rx="4"
                         fill="#1e1b4b"
@@ -1221,9 +1257,9 @@ export default function App() {
                         textAnchor="middle"
                         y="3"
                         fill="#ffffff"
-                        className="text-[8.5px] font-mono font-black"
+                        className="text-[8px] font-mono font-black"
                       >
-                        GPS: {selectedCountry.latitude}, {selectedCountry.longitude}
+                        GPS: {getCoordinateRange(selectedCountry.latitude)}, {getCoordinateRange(selectedCountry.longitude)}
                       </text>
                     </g>
                   </g>
@@ -1426,6 +1462,15 @@ export default function App() {
 
                 {/* Footer Buttons */}
                 <div className="flex gap-2 justify-end">
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeLandmark.title + ' ' + activeLandmark.countryName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all cursor-pointer shadow-sm shadow-blue-100 flex items-center gap-1.5"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>구글 지도로 보기</span>
+                  </a>
                   <button
                     onClick={() => setActiveLandmark(null)}
                     className="bg-slate-900 hover:bg-slate-800 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs transition-all cursor-pointer shadow-sm shadow-slate-200"
