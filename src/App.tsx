@@ -304,6 +304,48 @@ const getLandmarkImageUrl = (countryId: string, index: number): string => {
   return images[countryId]?.[index] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
 };
 
+const getFlagImageUrl = (countryId: string): string => {
+  const mapping: Record<string, string> = {
+    'uk': 'gb',
+    'france': 'fr',
+    'germany': 'de',
+    'italy': 'it',
+    'spain': 'es',
+    'greece': 'gr',
+    'norway': 'no',
+    'switzerland': 'ch',
+    'finland': 'fi',
+    'iceland': 'is',
+    'czech': 'cz',
+    'slovakia': 'sk',
+    'netherlands': 'nl',
+    'belgium': 'be',
+    'poland': 'pl',
+    'hungary': 'hu',
+    'ukraine': 'ua',
+    'bulgaria': 'bg',
+    'croatia': 'hr',
+    'austria': 'at',
+    'egypt': 'eg',
+    'algeria': 'dz',
+    'sudan': 'sd',
+    'nigeria': 'ng',
+    'namibia': 'na',
+    'south-africa': 'za',
+    'kenya': 'ke',
+    'morocco': 'ma',
+    'madagascar': 'mg',
+    'ethiopia': 'et',
+    'tanzania': 'tz',
+    'tunisia': 'tn',
+    'libya': 'ly',
+    'south-sudan': 'ss',
+    'somalia': 'so'
+  };
+  const code = mapping[countryId] || 'un';
+  return `https://flagcdn.com/w80/${code}.png`;
+};
+
 export default function App() {
   // Navigation / View State
   // 'home' = 지리 포털 메인 검색창, 'map' = 세계 지리 인터랙티브 탐색 지도
@@ -451,9 +493,11 @@ export default function App() {
                         className="w-full text-left px-4 py-3.5 hover:bg-blue-50/40 flex items-center justify-between border-b border-slate-50 last:border-0 transition-colors cursor-pointer group"
                       >
                         <div className="flex items-center gap-4">
-                          <span className="text-3xl filter drop-shadow-sm group-hover:scale-115 transition-transform duration-150" role="img" aria-label={country.name}>
-                            {country.flag}
-                          </span>
+                          <img 
+                            src={getFlagImageUrl(country.id)} 
+                            alt={country.name} 
+                            className="w-10 h-7 object-contain rounded-md border border-slate-200/50 filter drop-shadow-sm group-hover:scale-115 transition-transform duration-150" 
+                          />
                           <div>
                             <div className="flex items-center gap-1.5">
                               <span className="font-extrabold text-slate-800 text-sm">{country.name}</span>
@@ -517,9 +561,11 @@ export default function App() {
                     <div className="flex flex-col md:flex-row gap-6 items-center">
                       {/* Big Flag Box */}
                       <div className="w-48 h-32 bg-slate-100 border border-slate-200/80 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden group/flag flex-shrink-0">
-                        <span className="text-7xl filter drop-shadow-md select-none group-hover/flag:scale-110 transition-transform duration-300" role="img" aria-label={topMatch.name}>
-                          {topMatch.flag}
-                        </span>
+                        <img 
+                          src={getFlagImageUrl(topMatch.id)} 
+                          alt={topMatch.name} 
+                          className="w-28 h-20 object-contain rounded-md border border-slate-200 filter drop-shadow-md select-none group-hover/flag:scale-110 transition-transform duration-300" 
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent pointer-events-none" />
                       </div>
 
@@ -566,7 +612,11 @@ export default function App() {
                               onClick={() => selectCountryDirect(m)}
                               className="px-3 py-1.5 bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 rounded-xl flex items-center gap-2 transition-colors cursor-pointer text-xs font-bold"
                             >
-                              <span>{m.flag}</span>
+                              <img 
+                                src={getFlagImageUrl(m.id)} 
+                                alt={m.name} 
+                                className="w-5 h-3.5 object-contain rounded-xs border border-slate-200/50" 
+                              />
                               <span className="text-slate-700">{m.name}</span>
                             </button>
                           ))}
@@ -710,7 +760,7 @@ export default function App() {
                           className="w-full text-left px-3 py-2.5 hover:bg-blue-50/30 flex items-center justify-between border-b border-slate-50 last:border-0 transition-colors cursor-pointer"
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="text-2xl filter drop-shadow-xs">{country.flag}</span>
+                            <img src={getFlagImageUrl(country.id)} alt={country.name} className="w-7 h-5 object-contain rounded-sm border border-slate-200/50 filter drop-shadow-xs" />
                             <div>
                               <span className="font-extrabold text-slate-800 text-xs">{country.name}</span>
                               <span className="text-[10px] text-slate-400 ml-1 font-bold">({country.englishName})</span>
@@ -756,17 +806,20 @@ export default function App() {
                 
                 {/* Floating Flag Icon with user query highlighting */}
                 <div className="w-32 h-20 bg-white rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center shadow-md mb-3.5 hover:scale-105 transition-transform duration-200 relative group">
-                  <span className="text-6xl select-none filter drop-shadow-sm" role="img" aria-label={selectedCountry.name}>
-                    {selectedCountry.flag}
-                  </span>
+                  <img 
+                    src={getFlagImageUrl(selectedCountry.id)} 
+                    alt={selectedCountry.name} 
+                    className="w-20 h-14 object-contain rounded-md border border-slate-200/80 select-none filter drop-shadow-sm" 
+                  />
                 </div>
 
                 <div className="mt-1">
                   <span className="bg-blue-50 text-blue-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-blue-100">
                     {selectedCountry.continent} 대륙 국가 지식
                   </span>
-                  <h2 className="text-2xl font-black text-slate-900 mt-2 flex items-center justify-center gap-1.5">
-                    {selectedCountry.flag} {selectedCountry.name}
+                  <h2 className="text-2xl font-black text-slate-900 mt-2 flex items-center justify-center gap-2">
+                    <img src={getFlagImageUrl(selectedCountry.id)} alt={selectedCountry.name} className="w-8 h-5.5 object-contain rounded-sm border border-slate-200 filter drop-shadow-xs inline-block" />
+                    <span>{selectedCountry.name}</span>
                     <span className="text-slate-400 text-sm font-bold">({selectedCountry.englishName})</span>
                   </h2>
                   <p className="text-xs text-slate-500 font-bold mt-1">수도: {selectedCountry.capital}</p>
@@ -1003,8 +1056,8 @@ export default function App() {
                   <div className="space-y-2.5">
                     {/* Selected Country HUD row */}
                     <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-xl p-2.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-3xl filter drop-shadow-xs" role="img" aria-label={selectedCountry.name}>{selectedCountry.flag}</span>
+                      <div className="flex items-center gap-2.5">
+                        <img src={getFlagImageUrl(selectedCountry.id)} alt={selectedCountry.name} className="w-9 h-6 object-contain rounded-sm border border-slate-200/80 filter drop-shadow-xs" />
                         <div>
                           <span className="text-xs font-black text-slate-800">{selectedCountry.name}</span>
                           <span className="text-[10px] text-slate-400 block font-bold">{selectedCountry.englishName}</span>
@@ -1514,13 +1567,21 @@ export default function App() {
                             strokeWidth="1"
                             className="shadow-md"
                           />
+                          <image
+                            href={getFlagImageUrl(country.id)}
+                            x="-31"
+                            y="-5.5"
+                            width="14"
+                            height="11"
+                          />
                           <text
-                            textAnchor="middle"
+                            textAnchor="start"
+                            x="-13"
                             y="3"
                             fill={isSelected ? '#ffffff' : '#0f172a'}
                             className="text-[9.5px] font-black font-sans"
                           >
-                            {country.flag} {country.name}
+                            {country.name}
                           </text>
                         </g>
                       </g>
@@ -1542,13 +1603,16 @@ export default function App() {
                         key={neighName}
                         onClick={() => matchedCountry && selectCountryDirect(matchedCountry)}
                         disabled={!matchedCountry}
-                        className={`text-[10px] px-2.5 py-1.5 rounded-full border transition-all ${
+                        className={`text-[10px] px-2.5 py-1.5 rounded-full border transition-all flex items-center gap-1 ${
                           matchedCountry 
                             ? 'bg-slate-800 border-slate-700 hover:border-blue-400 hover:bg-slate-700 text-white cursor-pointer' 
                             : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
                         }`}
                       >
-                        {matchedCountry ? matchedCountry.flag : '🌐'} {neighName}
+                        {matchedCountry ? (
+                          <img src={getFlagImageUrl(matchedCountry.id)} alt={matchedCountry.name} className="w-4 h-3 object-contain rounded-xs border border-slate-700" />
+                        ) : '🌐'}
+                        <span>{neighName}</span>
                       </button>
                     );
                   })}
