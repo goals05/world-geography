@@ -663,9 +663,11 @@ export default function App() {
                   onClick={() => selectCountryDirect(country)}
                   className="p-3 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-2xl text-left transition-all duration-200 group flex items-center gap-3 cursor-pointer"
                 >
-                  <span className="text-3xl filter drop-shadow-sm group-hover:scale-115 transition-transform" role="img" aria-label={country.name}>
-                    {country.flag}
-                  </span>
+                  <img 
+                    src={getFlagImageUrl(country.id)} 
+                    alt={country.name} 
+                    className="w-10 h-7 object-contain rounded-md border border-slate-200/50 filter drop-shadow-sm group-hover:scale-115 transition-transform duration-150 flex-shrink-0" 
+                  />
                   <div className="overflow-hidden">
                     <p className="text-xs font-black text-slate-800 truncate">{country.name}</p>
                     <p className="text-[10px] text-slate-400 font-bold truncate">{country.capital}</p>
@@ -796,10 +798,10 @@ export default function App() {
           </div>
 
           {/* SPLIT PANELS (Left: Geographic Details, Right: Full Screen Map Viewport) */}
-          <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+          <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden relative">
             
             {/* LEFT SIDEBAR: Google Maps Country Profile Panel */}
-            <div className="w-full md:w-[420px] bg-white border-r border-slate-200 shadow-xl z-20 flex flex-col h-full overflow-y-auto">
+            <div className="w-full md:w-[420px] bg-white border-r border-slate-200 shadow-xl z-20 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto flex-shrink-0 order-2 md:order-1">
               
               {/* Header Hero Area */}
               <div className="relative bg-slate-50 border-b border-slate-100 p-6 flex flex-col items-center justify-center text-center">
@@ -966,7 +968,7 @@ export default function App() {
               </div>
 
               {/* NATURAL ENVIRONMENT & LANDMARK HERITAGES SECTION */}
-              <div className="p-5 flex flex-col gap-5 bg-slate-50/40 border-t border-slate-100 flex-1 overflow-y-auto max-h-[480px]">
+              <div className="p-5 flex flex-col gap-5 bg-slate-50/40 border-t border-slate-100 flex-1 overflow-y-visible md:overflow-y-auto h-auto md:max-h-[480px]">
                 
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-100 pb-2 flex-shrink-0">
                   <Star className="w-4 h-4 text-emerald-600 animate-pulse" />
@@ -1031,11 +1033,11 @@ export default function App() {
             </div>
 
             {/* RIGHT MAIN MAP VIEWPORT: Google Interactive Map */}
-            <div className="flex-1 h-full relative bg-[#e8ecef] flex items-center justify-center p-4">
+            <div className="flex-1 w-full h-[450px] sm:h-[550px] md:h-full relative bg-[#e8ecef] flex items-center justify-center p-4 flex-shrink-0 order-1 md:order-2">
               
               {/* Dynamic Geographical Coordinate Telemetry Dashboard */}
               {showTelemetry ? (
-                <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 shadow-lg max-w-sm font-sans animate-in fade-in duration-200">
+                <div className="absolute top-4 left-4 right-4 sm:right-auto z-10 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 shadow-lg sm:max-w-sm font-sans animate-in fade-in duration-200">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5 gap-4">
                     <div className="flex items-center gap-2">
                       <Globe className="w-5 h-5 text-blue-600 animate-spin-slow" />
@@ -1141,7 +1143,7 @@ export default function App() {
               )}
 
               {/* Map Layout Style Controls (Google Map Control Panel) */}
-              <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+              <div className="absolute bottom-6 right-6 md:top-4 md:bottom-auto md:right-4 z-10 flex flex-col gap-2">
                 
                 {/* Theme Selector */}
                 <div className="bg-white rounded-2xl border border-slate-200 p-1 shadow-md flex flex-col gap-0.5">
