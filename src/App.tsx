@@ -4,7 +4,7 @@ import {
   Search, MapPin, Globe, Compass, Sun, Send, 
   X, GraduationCap, ArrowLeft, Star, 
   Sparkles, Info, Map, AlertTriangle, Eye, EyeOff,
-  ExternalLink
+  ExternalLink, Plus, Minus, RefreshCw
 } from 'lucide-react';
 import { countriesData, Country } from './data/countries';
 
@@ -360,7 +360,141 @@ export default function App() {
 
   // Map Style State
   const [mapTheme, setMapTheme] = useState<'satellite' | 'terrain' | 'default'>('default');
-  const [showTelemetry, setShowTelemetry] = useState(true);
+  const [showTelemetry, setShowTelemetry] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
+  const [showMapControls, setShowMapControls] = useState(false);
+  const [showMapControlsOpt, setShowMapControlsOpt] = useState(false); // backup or original state
+
+  // Map Zoom & Pan State
+  const [scale, setScale] = useState<number>(1);
+  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [dragged, setDragged] = useState<boolean>(false);
+
+  // Zoom In/Out/Reset Handlers
+  const handleZoomIn = () => {
+    const newScale = Math.min(scale * 1.3, 5);
+    const centerX = mapWidth / 2;
+    const centerY = mapHeight / 2;
+    const dx = centerX - position.x;
+    const dy = centerY - position.y;
+    setPosition({
+      x: centerX - dx * (newScale / scale),
+      y: centerY - dy * (newScale / scale)
+    });
+    setScale(newScale);
+  };
+
+  const handleZoomOut = () => {
+    const newScale = Math.max(scale / 1.3, 0.6);
+    const centerX = mapWidth / 2;
+    const centerY = mapHeight / 2;
+    const dx = centerX - position.x;
+    const dy = centerY - position.y;
+    setPosition({
+      x: centerX - dx * (newScale / scale),
+      y: centerY - dy * (newScale / scale)
+    });
+    setScale(newScale);
+  };
+
+  const handleZoomReset = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  // Mouse & Touch Interaction Handlers for dragging the map
+  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    if (e.button !== 0) return; // Left click only
+    setIsDragging(true);
+    setDragged(false);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    if (!isDragging) return;
+    const newX = e.clientX - dragStart.x;
+    const newY = e.clientY - dragStart.y;
+    
+    const dx = newX - position.x;
+    const dy = newY - position.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      setDragged(true);
+    }
+    setPosition({ x: newX, y: newY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      setDragged(false);
+      const touch = e.touches[0];
+      setDragStart({ x: touch.clientX - position.x, y: touch.clientY - position.y });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (!isDragging) return;
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const newX = touch.clientX - dragStart.x;
+      const newY = touch.clientY - dragStart.y;
+      
+      const dx = newX - position.x;
+      const dy = newY - position.y;
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        setDragged(true);
+      }
+      setPosition({ x: newX, y: newY });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
+    const zoomFactor = 1.1;
+    let newScale = scale;
+    if (e.deltaY < 0) {
+      newScale = Math.min(scale * zoomFactor, 5);
+    } else {
+      newScale = Math.max(scale / zoomFactor, 0.6);
+    }
+
+    const svg = e.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const dx = mouseX - position.x;
+    const dy = mouseY - position.y;
+
+    setPosition({
+      x: mouseX - dx * (newScale / scale),
+      y: mouseY - dy * (newScale / scale)
+    });
+    setScale(newScale);
+  };
+
+  // Center the map on the selected country automatically when it changes
+  useEffect(() => {
+    if (selectedCountry) {
+      const targetScale = Math.max(scale, 1.3); // Keep current zoom, or at least 1.3x zoom
+      const cx = selectedCountry.mapCoords.x;
+      const cy = selectedCountry.mapCoords.y;
+      setScale(targetScale);
+      setPosition({
+        x: 400 - cx * targetScale,
+        y: 275 - cy * targetScale
+      });
+    }
+  }, [selectedCountry]);
 
   // Handle Google-like search submit
   const handleSearchSubmit = (e?: React.FormEvent, customQuery?: string) => {
@@ -801,7 +935,7 @@ export default function App() {
           <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden relative">
             
             {/* LEFT SIDEBAR: Google Maps Country Profile Panel */}
-            <div className="w-full md:w-[420px] bg-white border-r border-slate-200 shadow-xl z-20 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto flex-shrink-0 order-2 md:order-1">
+            <div className="w-full md:w-[420px] bg-white border-r border-slate-200 shadow-xl z-20 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto flex-shrink-0 order-1 md:order-1">
               
               {/* Header Hero Area */}
               <div className="relative bg-slate-50 border-b border-slate-100 p-6 flex flex-col items-center justify-center text-center">
@@ -1033,7 +1167,7 @@ export default function App() {
             </div>
 
             {/* RIGHT MAIN MAP VIEWPORT: Google Interactive Map */}
-            <div className="flex-1 w-full h-[450px] sm:h-[550px] md:h-full relative bg-[#e8ecef] flex items-center justify-center p-4 flex-shrink-0 order-1 md:order-2">
+            <div className="flex-1 w-full h-[450px] sm:h-[550px] md:h-full relative bg-[#e8ecef] flex items-center justify-center p-4 flex-shrink-0 order-2 md:order-2">
               
               {/* Dynamic Geographical Coordinate Telemetry Dashboard */}
               {showTelemetry ? (
@@ -1145,39 +1279,93 @@ export default function App() {
               {/* Map Layout Style Controls (Google Map Control Panel) */}
               <div className="absolute bottom-6 right-6 md:top-4 md:bottom-auto md:right-4 z-10 flex flex-col gap-2">
                 
-                {/* Theme Selector */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-1 shadow-md flex flex-col gap-0.5">
+                {!showMapControls ? (
                   <button
-                    onClick={() => setMapTheme('default')}
-                    className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all ${
-                      mapTheme === 'default' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                    }`}
+                    onClick={() => setShowMapControls(true)}
+                    className="bg-white/95 backdrop-blur-md hover:bg-slate-50 text-slate-800 font-black border border-slate-200 px-3 py-2.5 rounded-full shadow-lg flex items-center gap-1.5 text-[10px] transition-all duration-200 cursor-pointer self-end hover:scale-105 active:scale-95"
+                    title="지도 스타일 설정"
                   >
-                    일반 지도 (Default)
+                    <Map className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+                    <span>지도 스타일 선택</span>
                   </button>
-                  <button
-                    onClick={() => setMapTheme('terrain')}
-                    className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all ${
-                      mapTheme === 'terrain' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    지형 물리도 (Terrain)
-                  </button>
-                  <button
-                    onClick={() => setMapTheme('satellite')}
-                    className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all ${
-                      mapTheme === 'satellite' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    위성 지도 (Satellite)
-                  </button>
-                </div>
+                ) : (
+                  <div className="bg-white rounded-2xl border border-slate-200 p-2.5 shadow-xl flex flex-col gap-2 min-w-[160px] max-w-[200px] animate-in fade-in slide-in-from-right-2 duration-150">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 gap-4">
+                      <span className="text-[10px] font-black text-slate-800 flex items-center gap-1">
+                        <Map className="w-3.5 h-3.5 text-blue-600" />
+                        지도 스타일
+                      </span>
+                      <button
+                        onClick={() => setShowMapControls(false)}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center cursor-pointer"
+                        title="스타일 닫기"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    
+                    {/* Theme Buttons */}
+                    <div className="flex flex-col gap-1">
+                      <button
+                        onClick={() => setMapTheme('default')}
+                        className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all text-left cursor-pointer ${
+                          mapTheme === 'default' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        일반 지도 (Default)
+                      </button>
+                      <button
+                        onClick={() => setMapTheme('terrain')}
+                        className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all text-left cursor-pointer ${
+                          mapTheme === 'terrain' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        지형 물리도 (Terrain)
+                      </button>
+                      <button
+                        onClick={() => setMapTheme('satellite')}
+                        className={`px-3 py-1.5 text-[10px] font-black rounded-xl transition-all text-left cursor-pointer ${
+                          mapTheme === 'satellite' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        위성 지도 (Satellite)
+                      </button>
+                    </div>
 
-                {/* Scale Status Indicator */}
-                <div className="bg-white rounded-xl border border-slate-200 p-2 shadow-md text-center text-[10px] text-slate-500 font-bold">
-                  <span>지도 그리드 좌표계 자동 대입</span>
-                </div>
+                    {/* Scale Status Indicator inside the container */}
+                    <div className="bg-slate-50 rounded-xl p-2 text-center text-[9px] text-slate-400 font-bold border border-slate-100">
+                      그리드 좌표계 자동 대입
+                    </div>
+                  </div>
+                )}
 
+              </div>
+
+              {/* Floating Zoom & Pan Control Pad */}
+              <div className="absolute bottom-24 right-6 md:top-36 md:bottom-auto md:right-4 z-10 flex flex-col bg-white rounded-2xl border border-slate-200 p-1 shadow-lg gap-1">
+                <button
+                  onClick={handleZoomIn}
+                  className="w-8 h-8 rounded-xl hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-all cursor-pointer font-bold border border-transparent hover:border-slate-200"
+                  title="확대 (Zoom In)"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+                <div className="h-px bg-slate-100 mx-1" />
+                <button
+                  onClick={handleZoomOut}
+                  className="w-8 h-8 rounded-xl hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-all cursor-pointer font-bold border border-transparent hover:border-slate-200"
+                  title="축소 (Zoom Out)"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <div className="h-px bg-slate-100 mx-1" />
+                <button
+                  onClick={handleZoomReset}
+                  className="w-8 h-8 rounded-xl hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-all cursor-pointer font-bold border border-transparent hover:border-slate-200"
+                  title="지도 초기화"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />
+                </button>
               </div>
 
               {/* Dynamic Interactive Google Styled SVG Map */}
@@ -1185,28 +1373,63 @@ export default function App() {
                 mapTheme === 'satellite' ? 'bg-[#0f172a]' : mapTheme === 'terrain' ? 'bg-[#cbe5ff]' : 'bg-[#e0f2fe]'
               }`}>
                 
-                {/* Floating Map Legend Indicator */}
-                <div className="absolute bottom-4 left-4 z-10 bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-3 shadow-md max-w-xs text-[10px] text-slate-600 font-semibold space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] inline-block border border-blue-600" />
-                    <span>유럽 대륙 국가 노드</span>
+                {/* Floating Map Legend Indicator (Collapsible to keep map visible on mobile) */}
+                {!showLegend ? (
+                  <button
+                    onClick={() => setShowLegend(true)}
+                    className="absolute bottom-4 left-4 z-10 bg-white/95 backdrop-blur-md border border-slate-200 hover:bg-slate-50 text-slate-700 font-extrabold px-3 py-2 rounded-xl shadow-md flex items-center gap-1.5 text-[10px] transition-all duration-200 cursor-pointer"
+                    title="지도 범례 보기"
+                  >
+                    <Info className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+                    <span>지도 범례 표시</span>
+                  </button>
+                ) : (
+                  <div className="absolute bottom-4 left-4 z-10 bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-3 shadow-md max-w-[220px] sm:max-w-xs text-[10px] text-slate-600 font-semibold space-y-1.5 animate-in fade-in slide-in-from-bottom-2 duration-150">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1 mb-1 gap-4">
+                      <span className="font-black text-slate-800 flex items-center gap-1">
+                        <Info className="w-3.5 h-3.5 text-blue-600" />
+                        지도 범례
+                      </span>
+                      <button
+                        onClick={() => setShowLegend(false)}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center cursor-pointer"
+                        title="범례 접기"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] inline-block border border-blue-600 flex-shrink-0" />
+                      <span>유럽 대륙 국가 노드</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#fb923c] inline-block border border-orange-600 flex-shrink-0" />
+                      <span>아프리카 대륙 국가 노드</span>
+                    </div>
+                    <div className="h-px bg-slate-200 my-1" />
+                    <p className="text-slate-400 italic text-[9px] leading-normal">경도를 가르는 자오선과 위도선을 마킹했습니다.</p>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#fb923c] inline-block border border-orange-600" />
-                    <span>아프리카 대륙 국가 노드</span>
-                  </div>
-                  <div className="h-px bg-slate-200 my-1" />
-                  <p className="text-slate-400 italic">경도를 가르는 자오선과 위도선을 마킹했습니다.</p>
-                </div>
+                )}
 
                 {/* SVG Map Canvas */}
                 <svg
                   viewBox={`0 0 ${mapWidth} ${mapHeight}`}
-                  className="w-full h-full select-none"
+                  className="w-full h-full select-none cursor-grab active:cursor-grabbing"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  onWheel={handleWheel}
                 >
                   
-                  {/* Detailed Continental Landmasses with realistic shapes */}
-                  <g className="transition-all duration-500">
+                  {/* Root Pan & Zoom Container */}
+                  <g transform={`translate(${position.x}, ${position.y}) scale(${scale})`}>
+                    
+                    {/* Detailed Continental Landmasses with realistic shapes */}
+                    <g className="transition-all duration-500">
                     
                     {/* 1. Europe Mainland Outline */}
                     <path
@@ -1523,7 +1746,13 @@ export default function App() {
                       <g
                         key={country.id}
                         className="cursor-pointer"
-                        onClick={() => selectCountryDirect(country)}
+                        onClick={(e) => {
+                          if (dragged) {
+                            e.stopPropagation();
+                            return;
+                          }
+                          selectCountryDirect(country);
+                        }}
                       >
                         {/* Red high visibility pinpoint icon or pulse ring for SELECTED country */}
                         {isSelected && (
@@ -1589,6 +1818,7 @@ export default function App() {
                       </g>
                     );
                   })}
+                  </g>
                 </svg>
 
               </div>
